@@ -16,7 +16,35 @@ var XpenseJS = XpenseJS || {};
   var Categories = Backbone.Collection.extend({
 
     model: X.Models.Category,
-    localStorage: new Backbone.LocalStorage('xpensejs-categories')
+    localStorage: new Backbone.LocalStorage('xpensejs-categories'),
+
+    // total amount spent monthly as an array of date and amount
+    // if no category is specified, it will sum expenses from all categories
+    getMonthlyExpenditure: function(start, end, category) {
+
+      var months,
+          monthlyExpenditures;
+
+      if(!start || !end || end < start) {
+        throw new Error('Invalid date');
+      }
+
+      months = start.monthsInBetween(end);
+      monthlyExpenditures = _.map(months, function(m){
+        var expense = {
+          date: m
+        };
+        expense.amount = X.Collections.Expenses.getTotal(
+          m,
+          new Date(m.getFullYear(), m.getMonth(), m.daysInMonth()),
+          category
+        );
+        return expense;
+      });
+
+      return monthlyExpenditures;
+
+    }
 
   });
 

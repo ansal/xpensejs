@@ -22,4 +22,37 @@ var XpenseJS = XpenseJS || {};
     return d.getDate();
   };
 
+  // returns an array of object containing month with start date and end date
+  // end date is mandatory
+  Date.prototype.monthsInBetween = function(end) {
+
+    if(!end || end < this) {
+      throw new Error('Invalid date');
+    }
+
+    var startYear = this.getFullYear(),
+        month,
+        months = [],
+        endYear = end.getFullYear(),
+        startMonth = this.getMonth(),
+        endMonth = end.getMonth();
+
+    while(startYear < endYear) {
+      months.push( new Date(startYear, startMonth, 1) );
+      startMonth += 1;
+      if(startMonth === 12) {
+        startMonth = 0;
+        startYear += 1;
+      }
+    }
+    // remaining months if any when year becomes equal
+    while(startMonth <= endMonth) {
+      months.push( new Date(startYear, startMonth, 1) );
+      startMonth += 1;
+    }
+
+    return months;
+
+  };
+
 })();
