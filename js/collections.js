@@ -121,6 +121,20 @@ var XpenseJS = XpenseJS || {};
           return !expense.get('satisfied');
         });
       }
+    },
+
+    // returns total amount spent in a month
+    // same date rule as filterByDate
+    getTotal: function(start, end, category) {
+      if(!category) {
+        return this.filterByDate(start, end).reduce(function(sum, expense){
+          return sum + expense.get('amount');
+        }, 0);
+      } else {
+        return this.filterByCategory(category, start, end).reduce(function(sum, expense){
+          return sum + expense.get('amount');
+        }, 0);
+      }
     }
 
   });
