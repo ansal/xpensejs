@@ -10,8 +10,17 @@ var XpenseJS = XpenseJS || {};
   // shortcut for XpenseJS app variable
   var X = XpenseJS;
 
-  // Fetch all collections
-  XpenseJS.Collections.Categories.fetch({ reset: true });
-  XpenseJS.Collections.Expenses.fetch({ reset: true });
+  $(document).on('mobileinit', function(){
+
+    // disable handlings of links and hashtagas by jquery mobile
+    $.mobile.linkBindingEnabled = false;
+    $.mobile.hashListeningEnabled = false;
+
+    // Fetch all collections
+    X.Collections.Categories.fetch({ reset: true });
+    X.Collections.Expenses.fetch({ reset: true });
+
+
+  });
 
 })();
