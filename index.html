@@ -20,7 +20,30 @@
 </head>
 <body>
   
-  
+  <!-- Toolbar -->
+  <div data-role="header" data-position="fixed" data-theme="a">
+      <a href="#category-panel" class="ui-btn ui-shadow ui-corner-all ui-icon-bullets ui-btn-icon-notext"></a>
+      <h1>XpenseJS</h1>
+      <a  href="#add-popup" data-rel="popup" data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-notext"></a>
+  </div>
+
+  <div data-role="popup" id="add-popup" data-transition="slideup" data-theme="a">
+    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+    <ul data-role="listview" data-inset="true" style="min-width:210px;">
+      <li data-role="list-divider">Add</li>
+      <li data-icon="bullets"><a href="#">Category</a></li>
+      <li data-icon="star"><a href="#">Expense</a></li>
+    </ul>
+  </div>
+
+  <section id="app-container">
+
+  </section>
+
+  <!-- Panel -->
+  <div data-role="panel" data-display="overlay" id="category-panel">
+    
+  </div>
 
 </div>
 </body>
