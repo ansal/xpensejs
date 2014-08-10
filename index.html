@@ -5,46 +5,106 @@
   <title>XpenseJS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="js/lib/jquery.mobile/jquery.mobile-1.4.3.min.css">
+  <link rel="stylesheet" href="css/styles.css">
   <!-- Libraries used by XpenseJS app -->
   <script src="js/lib/jquery.min.js"></script>
+  <script src="js/mobile-init.js"></script>
   <script src="js/lib/jquery.mobile/jquery.mobile-1.4.3.min.js"></script>
   <script src="js/lib/underscore.min.js"></script>
   <script src="js/lib/backbone.min.js"></script>
   <script src="js/lib/backbone-localStorage.min.js"></script>
+</head>
+<body>
+  
+    <section id="app">
+      
+        <!-- Toolbar -->
+      <div data-role="header" data-position="fixed" data-theme="a">
+        <a href="#category-panel" class="ui-btn ui-shadow ui-corner-all ui-icon-bullets ui-btn-icon-notext"></a>
+        <h1 id="app-title">XpenseJS</h1>
+        <a id="popup-link" href="#" data-rel="popup" data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-notext"></a>
+      </div>
+
+      <!-- Add stuff popup -->
+      <div data-role="popup" id="add-popup" data-transition="slideup" data-theme="b">
+        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+        <ul data-role="listview" data-inset="true" style="min-width:210px;">
+          <li data-role="list-divider">Add</li>
+          <li data-icon="bullets"><a id="add-category-link" href="#">Category</a></li>
+          <li data-icon="star"><a href="#">Expense</a></li>
+        </ul>
+      </div>
+
+      <!-- Side panel -->
+      <div data-role="panel" data-position-fixed="true" data-display="overlay" id="category-panel" data-theme="b">
+        <ul data-role="listview">
+          <li data-icon="delete"><a id="panel-close-button" href="#" data-rel="close">Close Menu</a></li>
+          <li data-role="list-divider"></li>
+          <li data-icon="home"><a href="#/dashboard">Dashboard</a></li>
+          <li data-icon="bullets"><a href="#/category">Categories</a></li>
+          <li data-icon="star"><a href="#panel-fixed-page2">Expenses</a></li>
+          <li data-icon="gear"><a href="#panel-fixed-page2">Settings</a></li>
+          <li data-role="list-divider"></li>
+          <li data-icon="user"><a href="#panel-fixed-page2">About</a></li>
+        </ul>
+      </div>
+
+      <!-- Container where other views are injected -->
+      <section id="app-container">
+      </section>
+
+    </section>
+
+  <!-- Templates -->
+  <!-- Dashboard template -->
+  <script type="text/template" id="dashboard-template">
+    <div class="ui-grid-b">
+      <div class="ui-block-a"></div>
+      <div class="ui-block-b">
+        <h1 class="expense-amount">
+          500
+        </h1>
+        <small class="expense-amount-caption">Spent this month!</small>
+      </div>
+      <div class="ui-block-c"></div>
+    </div>
+  </script>
+
+  <!-- Add new Category -->
+  <script type="text/template" id="edit-category-template">
+    <label for="category-title">
+      <h1>Category Title</h1>
+    </label>
+    <input id="category-title" type="text" value="<%= category.get('title') %>">
+    <input data-theme="b" data-icon="check" data-iconshadow="true" value="Update" type="button" id="update-category-button">
+
+    <div data-role="popup" id="update-category-error" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+      <div data-role="header" data-theme="a">
+      <h1>Hey there!</h1>
+      </div>
+      <div role="main" class="ui-content">
+        <h3 class="ui-title">I need a title to continue!</h3>
+        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn ui-btn-b" data-rel="back">Okay, Got it.</a>
+      </div>
+    </div>
+  </script>
+
+  <!-- Categories List View -->
+  <script id="category-list-template" type="text/template">
+    <ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
+      <% _.each(categories, function (c) { %>
+        <li><a href="#"><%= c.get('title') %> </a></li>
+      <% }); %>
+    </ul>
+  </script>
+
   <!-- Backbone code for XpenseJS app -->
   <script src="js/utils.js"></script>
   <script src="js/models.js"></script>
   <script src="js/collections.js"></script>
   <script src="js/views.js"></script>
+  <script src="js/routes.js"></script>
   <script src="js/app.js"></script>
-</head>
-<body>
-  
-  <!-- Toolbar -->
-  <div data-role="header" data-position="fixed" data-theme="a">
-      <a href="#category-panel" class="ui-btn ui-shadow ui-corner-all ui-icon-bullets ui-btn-icon-notext"></a>
-      <h1>XpenseJS</h1>
-      <a  href="#add-popup" data-rel="popup" data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-notext"></a>
-  </div>
 
-  <div data-role="popup" id="add-popup" data-transition="slideup" data-theme="a">
-    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-    <ul data-role="listview" data-inset="true" style="min-width:210px;">
-      <li data-role="list-divider">Add</li>
-      <li data-icon="bullets"><a href="#">Category</a></li>
-      <li data-icon="star"><a href="#">Expense</a></li>
-    </ul>
-  </div>
-
-  <section id="app-container">
-
-  </section>
-
-  <!-- Panel -->
-  <div data-role="panel" data-display="overlay" id="category-panel">
-    
-  </div>
-
-</div>
 </body>
-</html>
+</html> 

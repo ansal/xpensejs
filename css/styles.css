@@ -1,0 +1,15 @@
+/* Custom styles for Xpense JS */
+.expense-amount {
+  text-align: center;
+  font-size: 5em;
+  font-weight: normal;
+  margin-top: 1%;
+  margin-bottom: 0%;
+  color: green;
+}
+
+.expense-amount-caption {
+  font-size: 1em;
+  color: gray;
+  text-align: center;
+}

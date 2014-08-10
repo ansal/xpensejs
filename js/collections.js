@@ -17,6 +17,9 @@ var XpenseJS = XpenseJS || {};
 
     model: X.Models.Category,
     localStorage: new Backbone.LocalStorage('xpensejs-categories'),
+    comparator: function( collection ){
+      return( collection.get( 'title' ) );
+    },
 
     // total amount spent monthly as an array of date and amount
     // if no category is specified, it will sum expenses from all categories
