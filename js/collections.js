@@ -56,6 +56,9 @@ var XpenseJS = XpenseJS || {};
 
     model: X.Models.Expense,
     localStorage: new Backbone.LocalStorage('xpensejs-expenses'),
+    comparator: function( collection ){
+      return - ( new Date(collection.get('date')).getTime() );
+    },
 
     // filters expenses by date
     // if arguments are not present, it returns expenses for

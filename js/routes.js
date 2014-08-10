@@ -14,7 +14,7 @@ var XpenseJS = XpenseJS || {};
 
   // Pre actions for router
   function routerPreActions(config) {
-    if(config.appTitle){
+    if(config && config.appTitle){
       $('#app-title').text(config.appTitle);
     }
     $('#category-panel').panel('close');
@@ -34,8 +34,13 @@ var XpenseJS = XpenseJS || {};
     
     routes: {
       'dashboard' : 'dashboard',
+
+      // Category
+      'category': 'listCategory',
       'category/edit/:id': 'editCategory',
-      'category': 'listCategory'
+      'category/view/:id': 'viewCategory',
+      // This is a temporary fix to the problem of click events not firing
+      'category/destroy/:id': 'destroyCategory'
     },
 
     dashboard: function() {
@@ -61,6 +66,7 @@ var XpenseJS = XpenseJS || {};
       $container.trigger('create');
       $.mobile.loading('hide');
     },
+
     listCategory: function() {
       routerPreActions({
         appTitle: 'Categories'
@@ -68,6 +74,31 @@ var XpenseJS = XpenseJS || {};
       X.currentView = new X.Views.ListCategory;
       $container.html( X.currentView.render().$el );
       $container.trigger('create');
+      $.mobile.loading('hide');
+    },
+
+    viewCategory: function(id) {
+      // Prevents a bug which caches id!!!
+      $('#delete-category-popup').remove();
+      var category = X.Collections.Categories.get(id);
+      // TODO: Show error if id is invalid
+      routerPreActions({
+        appTitle: category.get('title')
+      });
+      X.currentView = new X.Views.SingleCategory({ model: category });
+      $container.html( X.currentView.render().$el );
+      $container.trigger('create');
+      $.mobile.loading('hide');
+    },
+
+    // Temporary fix to delete a category
+    destroyCategory: function(id) {
+      $('#delete-category-popup').remove();
+      var category = X.Collections.Categories.get(id);
+      // TODO: Show error if id is invalid
+      routerPreActions();
+      category.destroy();
+      window.location.href = '#/category';
       $.mobile.loading('hide');
     }
   });

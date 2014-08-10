@@ -75,6 +75,7 @@ var XpenseJS = XpenseJS || {};
       e.preventDefault();
       var $button = $(e.target);
       $button.attr('disabled', true);
+      var self = this;
       var input = $('#category-title').val();
       if(!input) {
         $('#update-category-error').popup('open');
@@ -85,7 +86,7 @@ var XpenseJS = XpenseJS || {};
       this.model.set('title', input[0].toUpperCase() + input.slice(1));
       this.model.save({}, {
         success: function() {
-          window.location.href = '#/category';
+          window.location.href = '#/category/view/' + self.model.get('id');
         },
         error: function() {
           window.alert('Unfortunately this action could not be completed!');
@@ -104,6 +105,30 @@ var XpenseJS = XpenseJS || {};
       this.$el.html( html );
       return this;
     }
+  });
+
+  // Individual Category View
+  X.Views.SingleCategory = Backbone.View.extend({
+    template: _.template( $('#category-view-template').html() ),
+    events: {
+      'click #delete-popup-button' : 'showDeletePopup',
+    },
+
+    render: function() {
+      var html = this.template({
+        category: this.model,
+        expenses: X.Collections.Expenses.filterByCategory(this.model.get('id'))
+      });
+      this.$el.html( html );
+      return this;
+    },
+
+    showDeletePopup: function(e) {
+      e.preventDefault();
+      var $popup = $('#delete-category-popup');
+      $popup.popup('open');
+    }
+
   });
 
 })();

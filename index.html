@@ -93,9 +93,44 @@
   <script id="category-list-template" type="text/template">
     <ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
       <% _.each(categories, function (c) { %>
-        <li><a href="#"><%= c.get('title') %> </a></li>
+        <li><a href="#/category/view/<%= c.get('id') %>"><%= c.get('title') %> </a></li>
       <% }); %>
     </ul>
+  </script>
+
+  <!-- Individual category view -->
+  <script id="category-view-template" type="text/template">
+    <div class="ui-grid-b">
+      <div class="ui-block-a">
+        <a class="ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-notext ui-btn-inline" href="#/category"></a>
+      </div>
+      <div class="ui-block-b button-center">
+        <a class="ui-shadow ui-btn ui-corner-all ui-icon-edit ui-btn-icon-notext ui-btn-inline" href="#/category/edit/<%= category.get('id') %>"></a>
+      </div>
+      <div class="ui-block-c button-right">
+        <a class="ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-inline" id="delete-popup-button"></a>
+      </div>
+    </div>
+
+    <ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
+      <% _.each(expenses, function(x){ %>
+        <li><a href="#/expense/view/<%= x.get('id') %>"><%= x.get('title') %> </a></li>
+      <% }); %>
+    </ul>
+
+    <div data-role="popup" id="delete-category-popup" data-overlay-theme="b" data-theme="b" data-dismissible="true" style="max-width:400px;">
+      <div data-role="header" data-theme="a">
+      <h1>Hey there!</h1>
+      </div>
+      <div role="main" class="ui-content">
+        <h3 class="ui-title">Are you sure?</h3>
+        <p>This will delete all expenses under this category too.</p>
+        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn ui-btn-b" data-rel="back">Cancel</a>
+        <% console.log(category.get('title'), category.get('id')) %>
+        <a class="ui-btn ui-corner-all ui-shadow ui-btn ui-btn-b" href="#/category/destroy/<%= category.get('id') %>">Delete!</a>
+      </div>
+    </div>
+
   </script>
 
   <!-- Backbone code for XpenseJS app -->

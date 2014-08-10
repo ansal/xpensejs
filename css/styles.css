@@ -13,3 +13,11 @@
   color: gray;
   text-align: center;
 }
+
+.button-right {
+  text-align: right;
+}
+
+.button-center {
+  text-align: center;
+}
