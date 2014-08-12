@@ -31,8 +31,20 @@
         <ul data-role="listview" data-inset="true" style="min-width:210px;">
           <li data-role="list-divider">Add</li>
           <li data-icon="bullets"><a id="add-category-link" href="#">Category</a></li>
-          <li data-icon="star"><a href="#">Expense</a></li>
+          <li data-icon="star"><a id="add-expense-link" href="#">Expense</a></li>
         </ul>
+      </div>
+
+      <!-- No category error -->
+      <div data-role="popup" id="no-category-error" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+        <div data-role="header" data-theme="a">
+        <h1>Hey there!</h1>
+        </div>
+        <div role="main" class="ui-content">
+          <h3 class="ui-title">You have not created any category yet!</h3>
+          <p>Please create a category first before adding an expense.</p>
+          <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn ui-btn-b" data-rel="back">Okay, Got it.</a>
+        </div>
       </div>
 
       <!-- Side panel -->
@@ -70,10 +82,10 @@
     </div>
   </script>
 
-  <!-- Add new Category -->
+  <!-- Add/Edit new Category -->
   <script type="text/template" id="edit-category-template">
     <label for="category-title">
-      <h1>Category Title</h1>
+      <h4>Category Title</h4>
     </label>
     <input id="category-title" type="text" value="<%= category.get('title') %>">
     <input data-theme="b" data-icon="check" data-iconshadow="true" value="Update" type="button" id="update-category-button">
@@ -114,7 +126,7 @@
 
     <ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
       <% _.each(expenses, function(x){ %>
-        <li><a href="#/expense/view/<%= x.get('id') %>"><%= x.get('title') %> </a></li>
+        <li><a href="#/expense/edit/<%= x.get('id') %>"><%= x.get('title') %> </a></li>
       <% }); %>
     </ul>
 
@@ -126,11 +138,54 @@
         <h3 class="ui-title">Are you sure?</h3>
         <p>This will delete all expenses under this category too.</p>
         <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn ui-btn-b" data-rel="back">Cancel</a>
-        <% console.log(category.get('title'), category.get('id')) %>
         <a class="ui-btn ui-corner-all ui-shadow ui-btn ui-btn-b" href="#/category/destroy/<%= category.get('id') %>">Delete!</a>
       </div>
     </div>
 
+  </script>
+
+  <!-- Add/Edit new Expense -->
+  <script type="text/template" id="edit-expense-template">
+    <label for="expense-category" class="select">
+      <h4>Category</h4>
+    </label>
+    <select id="expense-category">
+      <% _.each(categories, function(c) { %>
+        <% if (c.get('id') === expense.get('category') ) { %>
+          <option selected="selected" value="<%= c.get('id') %>"><%= c.get('title') %></option>
+        <% } else { %>
+          <option value="<%= c.get('id') %>"><%= c.get('title') %></option>
+        <% } %>
+      <% }); %>
+    </select>
+    <label for="expense-title">
+      <h4>Expense Title</h4>
+    </label>
+    <input id="expense-title" type="text" value="<%= expense.get('title') %>">
+    <label for="expense-amount">
+      <h4>Amount</h4>
+    </label>
+    <input id="expense-amount" type="number" value="<%= expense.get('amount') %>">
+    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+        <legend>
+          <h4>Satisfied with this?</h4>
+        </legend>
+        <input name="satisfaction-yes" id="satisfaction-yes" <%= expense.get('satisfied') === true ? 'checked="checked"' : '' %> type="checkbox">
+        <label for="satisfaction-yes">Yes</label>
+        <input name="satisfaction-no" id="satisfaction-no" <%= expense.get('satisfied') === false ? 'checked=""' : '' %> type="checkbox">
+        <label for="satisfaction-no">No</label>
+    </fieldset>
+    <input data-theme="b" data-icon="check" data-iconshadow="true" value="Update" type="button" id="update-expense-button">
+
+    <div data-role="popup" id="update-expense-error" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+      <div data-role="header" data-theme="a">
+      <h1>Hey there!</h1>
+      </div>
+      <div role="main" class="ui-content">
+        <h3 class="ui-title">I need a title to continue!</h3>
+        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn ui-btn-b" data-rel="back">Okay, Got it.</a>
+      </div>
+    </div>
   </script>
 
   <!-- Backbone code for XpenseJS app -->

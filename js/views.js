@@ -19,6 +19,7 @@ var XpenseJS = XpenseJS || {};
     events: {
       'click #popup-link': 'showAddPopup',
       'click #add-category-link': 'addCategory',
+      'click #add-expense-link': 'addExpense',
       'click #panel-close-button': 'closePanel'
     },
 
@@ -33,6 +34,31 @@ var XpenseJS = XpenseJS || {};
       $('#add-popup').popup('close');
       var category = X.Collections.Categories.create({});
       window.location.href = '#/category/edit/' + category.get('id');
+    },
+
+    addExpense: function(e) {
+
+      // Event handler for listening to first popup close event
+      function addPopupClosed(e, popup) {
+        // Check whether categories exist before adding expense
+        // If no categories exist, ask user to create a category first
+        if(X.Collections.Categories.length === 0) {
+          $('#no-category-error').popup('open');
+          $('#add-popup').off( "popupafterclose", addPopupClosed);
+          return;
+        }
+        var expense = X.Collections.Expenses.create({
+          category: X.Collections.Categories.models[0].id
+        });
+        window.location.href = '#/expense/edit/' + expense.get('id');
+        $('#add-popup').off( "popupafterclose", addPopupClosed);
+      }
+
+      e.preventDefault();
+      // Registering an event handler on close event prevents other modal window
+      // not showing up 
+      $('#add-popup').on( "popupafterclose", addPopupClosed);
+      $('#add-popup').popup('close');
     },
 
     closePanel: function(e) {
@@ -129,6 +155,80 @@ var XpenseJS = XpenseJS || {};
       $popup.popup('open');
     }
 
+  });
+
+  // Add/Update an expense
+  X.Views.EditExpense = Backbone.View.extend({
+    template: _.template( $('#edit-expense-template').html() ),
+    events: {
+      'click #update-expense-button': 'updateExpense',
+      'change #satisfaction-yes': 'satisfiedYes',
+      'change #satisfaction-no': 'satisfiedNo'
+    },
+    initialize: function() {
+
+    },
+    render: function() {
+      var html = this.template({
+        expense: this.model,
+        categories: X.Collections.Categories.models
+      });
+      this.$el.html( html );
+      return this;
+    },
+    satisfiedYes: function(e) {
+      $('#satisfaction-no').prop('checked', false).checkboxradio('refresh');
+    },
+    satisfiedNo: function(e) {
+      $('#satisfaction-yes').prop('checked', false).checkboxradio('refresh');
+    },
+    updateExpense: function(e) {
+
+      // build form attributes and return an object
+      // if validation fails returns undefined
+      function buildAttrs() {
+        var category = $('#expense-category'),
+            title = $('#expense-title').val(),
+            amount = $('#expense-amount').val(),
+            satisfaction;
+        satisfaction = $('#satisfaction-yes').prop('checked');
+        category = X.Collections.Categories.get(category.val());
+
+        if(!category || ! title || !amount || !category) {
+          window.alert('Please provide all field values!');
+          return;
+        }
+
+        amount = parseInt(amount);
+        if(!amount || amount < 0) {
+          window.alert('Invalid amount!');
+          return;
+        }
+
+        return {
+          category: category.get('id'),
+          title: title,
+          amount: amount,
+          satisfied: satisfaction,
+          date: new Date
+        };
+
+      }
+
+      e.preventDefault();
+      var expense = buildAttrs();
+      // Convert into upper case before saving
+      expense.title = expense.title[0].toUpperCase() + expense.title.slice(1);
+      var self = this;
+      this.model.save(expense, {
+        success: function() {
+          window.location.href = '#/category/view/' + self.model.get('category');
+        },
+        error: function() {
+          window.alert('Unfortunately this action could not be completed!');
+        }
+      });
+    }
   });
 
 })();

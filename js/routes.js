@@ -40,7 +40,10 @@ var XpenseJS = XpenseJS || {};
       'category/edit/:id': 'editCategory',
       'category/view/:id': 'viewCategory',
       // This is a temporary fix to the problem of click events not firing
-      'category/destroy/:id': 'destroyCategory'
+      'category/destroy/:id': 'destroyCategory',
+
+      // Expense
+      'expense/edit/:id': 'editExpense'
     },
 
     dashboard: function() {
@@ -100,7 +103,19 @@ var XpenseJS = XpenseJS || {};
       category.destroy();
       window.location.href = '#/category';
       $.mobile.loading('hide');
+    },
+
+    editExpense: function(id) {
+      var expense = X.Collections.Expenses.get(id);
+      routerPreActions({
+        appTitle: 'Editing ' + expense.get('title')
+      });
+      X.currentView = new X.Views.EditExpense({ model: expense });
+      $container.html( X.currentView.render().$el );
+      $container.trigger('create');
+      $.mobile.loading('hide');
     }
+
   });
 
 })();
