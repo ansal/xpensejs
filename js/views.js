@@ -163,7 +163,8 @@ var XpenseJS = XpenseJS || {};
     events: {
       'click #update-expense-button': 'updateExpense',
       'change #satisfaction-yes': 'satisfiedYes',
-      'change #satisfaction-no': 'satisfiedNo'
+      'change #satisfaction-no': 'satisfiedNo',
+      'click #delete-popup-button': 'deleteExpense'
     },
     initialize: function() {
 
@@ -228,6 +229,16 @@ var XpenseJS = XpenseJS || {};
           window.alert('Unfortunately this action could not be completed!');
         }
       });
+    },
+    deleteExpense: function(e) {
+      e.preventDefault();
+      var confirmation = window.confirm('Are you sure?');
+      if(!confirmation) {
+        return;
+      }
+      var category = this.model.get('category');
+      this.model.destroy();
+      window.location.href = '#/category/view/' + category;
     }
   });
 

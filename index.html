@@ -54,7 +54,6 @@
           <li data-role="list-divider"></li>
           <li data-icon="home"><a href="#/dashboard">Dashboard</a></li>
           <li data-icon="bullets"><a href="#/category">Categories</a></li>
-          <li data-icon="star"><a href="#panel-fixed-page2">Expenses</a></li>
           <li data-icon="gear"><a href="#panel-fixed-page2">Settings</a></li>
           <li data-role="list-divider"></li>
           <li data-icon="user"><a href="#panel-fixed-page2">About</a></li>
@@ -146,6 +145,18 @@
 
   <!-- Add/Edit new Expense -->
   <script type="text/template" id="edit-expense-template">
+
+    <div class="ui-grid-b">
+      <div class="ui-block-a">
+        <a class="ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-notext ui-btn-inline" href="#/category/view/<%= expense.get('category') %>"></a>
+      </div>
+      <div class="ui-block-b button-center">
+      </div>
+      <div class="ui-block-c button-right">
+        <a class="ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-inline" id="delete-popup-button"></a>
+      </div>
+    </div>
+
     <label for="expense-category" class="select">
       <h4>Category</h4>
     </label>
