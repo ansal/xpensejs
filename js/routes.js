@@ -43,18 +43,24 @@ var XpenseJS = XpenseJS || {};
       'category/destroy/:id': 'destroyCategory',
 
       // Expense
-      'expense/edit/:id': 'editExpense'
+      'expense/edit/:id': 'editExpense',
+
+      'settings': 'settings',
+      'about': 'about'
     },
 
     dashboard: function() {
       routerPreActions({
-        appTitle: 'Dashboard'
+        appTitle: 'Xpense.JS'
       });
       if(X.currentView) {
         X.currentView.remove();
       }
       X.currentView = new X.Views.Dashboard;
       $container.html( X.currentView.render().$el );
+      X.appMainView.updateMonthlyExpenditure();
+      X.appMainView.drawSatisfactionChart();
+      X.appMainView.drawSpendingsChart();
       $.mobile.loading('hide');
     },
 
@@ -111,6 +117,26 @@ var XpenseJS = XpenseJS || {};
         appTitle: 'Editing ' + expense.get('title')
       });
       X.currentView = new X.Views.EditExpense({ model: expense });
+      $container.html( X.currentView.render().$el );
+      $container.trigger('create');
+      $.mobile.loading('hide');
+    },
+
+    settings: function() {
+      routerPreActions({
+        appTitle: 'Settings'
+      });
+      X.currentView = new X.Views.Settings();
+      $container.html( X.currentView.render().$el );
+      $container.trigger('create');
+      $.mobile.loading('hide');
+    },
+
+    about: function () {
+      routerPreActions({
+        appTitle: 'About'
+      });
+      X.currentView = new X.Views.About();
       $container.html( X.currentView.render().$el );
       $container.trigger('create');
       $.mobile.loading('hide');

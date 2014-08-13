@@ -9,7 +9,7 @@
 }
 
 .expense-amount-caption {
-  font-size: 1em;
+  font-size: 0.8em;
   color: gray;
   text-align: center;
 }
@@ -19,5 +19,10 @@
 }
 
 .button-center {
+  text-align: center;
+}
+
+.danger-zone {
+  color: red;
   text-align: center;
 }

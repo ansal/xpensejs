@@ -13,6 +13,7 @@
   <script src="js/lib/underscore.min.js"></script>
   <script src="js/lib/backbone.min.js"></script>
   <script src="js/lib/backbone-localStorage.min.js"></script>
+  <script src="js/lib/chart.min.js"></script>
 </head>
 <body>
   
@@ -21,7 +22,7 @@
         <!-- Toolbar -->
       <div data-role="header" data-position="fixed" data-theme="a">
         <a href="#category-panel" class="ui-btn ui-shadow ui-corner-all ui-icon-bullets ui-btn-icon-notext"></a>
-        <h1 id="app-title">XpenseJS</h1>
+        <h1 id="app-title">Xpense.JS</h1>
         <a id="popup-link" href="#" data-rel="popup" data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-notext"></a>
       </div>
 
@@ -54,9 +55,9 @@
           <li data-role="list-divider"></li>
           <li data-icon="home"><a href="#/dashboard">Dashboard</a></li>
           <li data-icon="bullets"><a href="#/category">Categories</a></li>
-          <li data-icon="gear"><a href="#panel-fixed-page2">Settings</a></li>
+          <li data-icon="gear"><a href="#/settings">Settings</a></li>
           <li data-role="list-divider"></li>
-          <li data-icon="user"><a href="#panel-fixed-page2">About</a></li>
+          <li data-icon="user"><a href="#/about">About</a></li>
         </ul>
       </div>
 
@@ -72,12 +73,22 @@
     <div class="ui-grid-b">
       <div class="ui-block-a"></div>
       <div class="ui-block-b">
-        <h1 class="expense-amount">
-          500
+        <h1 class="expense-amount" id="expense-amount">
+          0
         </h1>
         <small class="expense-amount-caption">Spent this month!</small>
       </div>
       <div class="ui-block-c"></div>
+    </div>
+    <div style="text-align:center" id="satisfied-chart-area">
+      <hr>
+      <h1>Your Spending Satisfaction!</h1>
+      <canvas id="satisfied-chart"></canvas>
+    </div>
+    <div style="text-align:center" id="spending-chart-area">
+      <hr>
+      <h1>Your Spendings This Month!</h1>
+      <canvas id="spending-chart"></canvas>
     </div>
   </script>
 
@@ -197,6 +208,20 @@
         <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn ui-btn-b" data-rel="back">Okay, Got it.</a>
       </div>
     </div>
+  </script>
+
+  <script id="settings-template" type="text/template">
+    <h2 class="danger-zone">Danger Zone!</h2>
+    <input data-theme="b" data-icon="check" data-iconshadow="true" value="Clear All Data" type="button" id="clear-data-button">
+  </script>
+
+  <script id="about-template" type="text/template">
+    <h2 class="button-center">Xpense.JS</h2>
+    <hr>
+    <p>Hey there! XpenseJS is a simple app to calculate your monthly expenses. It is built using HTML5, Javascript, jQuery Mobile and BackboneJS. APK file is packaged using Apache Cordova.</p
+    <p>The source code is avaiable on github at <a href="https://github.com/ansal/xpensejs">github.com/ansal/xpensejs</a></p>
+    <p>Have a great day!</p>
+    <hr>
   </script>
 
   <!-- Backbone code for XpenseJS app -->

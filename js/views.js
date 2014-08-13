@@ -23,6 +23,98 @@ var XpenseJS = XpenseJS || {};
       'click #panel-close-button': 'closePanel'
     },
 
+    updateMonthlyExpenditure: function() {
+      $('#expense-amount').html( X.Collections.Expenses.getTotal() );
+    },
+
+    drawSatisfactionChart: function() {
+
+      var expenses = XpenseJS.Collections.Expenses.filterByDate();
+      if(expenses.length === 0) {
+        $('#satisfied-chart-area').hide();
+        return;
+      } else {
+        $('#satisfied-chart-area').show();
+      }
+
+      var ctx = document.getElementById("satisfied-chart").getContext("2d");
+      var chart = new Chart(ctx).Pie([
+        {
+          value: XpenseJS.Collections.Expenses.getSatisfied().length,
+          color: 'green',
+          label: 'Satisfied spendings!'
+        },
+        {
+          value: XpenseJS.Collections.Expenses.getDissatisfied().length,
+          color: 'red',
+          label: 'Dissatisfied spendings!'
+        }
+      ], {
+        responsive: true,
+        animation: false
+      });
+    },
+
+    drawSpendingsChart: function() {
+
+      var expenses = XpenseJS.Collections.Expenses.filterByDate();
+      if(expenses.length === 0) {
+        $('#spending-chart-area').hide();
+        return;
+      } else {
+        $('#spending-chart-area').show();
+      }
+
+      var ctx = document.getElementById("spending-chart").getContext("2d");
+      var labels = [];
+
+      var today = new Date;
+      var noDays = today.daysInMonth();
+      for(var i = 1; i <= noDays; i += 1) {
+        labels.push('' + i);
+      }
+
+      // Populate chart data with monthly data
+      var data = [];
+      var monthlyData = XpenseJS.Collections.Expenses.filterByDate();
+      for(var i = 1; i <= noDays; i += 1) {
+        var found = false;
+        for(var j = 0; j < monthlyData.length; j+= 1) {
+          var date = new Date( monthlyData[j].get('date') );
+          if(date.getDay() === i) {
+            data.push( monthlyData[j].get('amount') );
+            found = true;
+            break;
+          }
+        }
+        if(!found) {
+          data.push(0);
+        }
+      }
+
+      var chartData = {
+        labels: labels,
+        datasets: [
+          {
+              label: "Daily Expenditure in this Month!",
+              fillColor: "rgba(220,220,220,0.2)",
+              strokeColor: "rgba(220,220,220,1)",
+              pointColor: "rgba(220,220,220,1)",
+              pointStrokeColor: "#fff",
+              pointHighlightFill: "#fff",
+              pointHighlightStroke: "rgba(220,220,220,1)",
+              data: data
+          }
+        ]
+      };
+
+      var chart = new Chart(ctx).Line(chartData, {
+        responsive: true,
+        animation: false
+      });
+
+    },
+
     // Shows a popup where user can add stuff
     showAddPopup: function(e) {
       e.preventDefault();
@@ -218,6 +310,9 @@ var XpenseJS = XpenseJS || {};
 
       e.preventDefault();
       var expense = buildAttrs();
+      if(typeof expense === 'undefined') {
+        return;
+      }
       // Convert into upper case before saving
       expense.title = expense.title[0].toUpperCase() + expense.title.slice(1);
       var self = this;
@@ -240,6 +335,43 @@ var XpenseJS = XpenseJS || {};
       this.model.destroy();
       window.location.href = '#/category/view/' + category;
     }
+  });
+
+  // Settings View
+  X.Views.Settings = Backbone.View.extend({
+    template: _.template( $('#settings-template').html() ),
+    events: {
+      'click #clear-data-button' : 'clearData',
+    },
+
+    render: function() {
+      var html = this.template({});
+      this.$el.html( html );
+      return this;
+    },
+
+    clearData: function() {
+      var confirmation = confirm('WARNING!!!\n\nThis will delete everything!\n\nAre you sure?');
+      if(!confirmation) {
+        return;
+      }
+      localStorage.clear();
+      window.location.href = '#/dashboard';
+      window.location.reload();
+    }
+
+  });
+
+  // About View
+  X.Views.About = Backbone.View.extend({
+    template: _.template( $('#about-template').html() ),
+
+    render: function() {
+      var html = this.template({});
+      this.$el.html( html );
+      return this;
+    }
+
   });
 
 })();
