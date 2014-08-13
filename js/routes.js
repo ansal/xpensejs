@@ -106,6 +106,11 @@ var XpenseJS = XpenseJS || {};
       var category = X.Collections.Categories.get(id);
       // TODO: Show error if id is invalid
       routerPreActions();
+      _.each(X.Collections.Expenses.models, function(e){
+        if(e.get('category') === category.get('id')) {
+          e.destroy();
+        }
+      });
       category.destroy();
       window.location.href = '#/category';
       $.mobile.loading('hide');
